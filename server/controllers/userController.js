@@ -50,18 +50,49 @@ const registerNewUser = async (req, res) =>{
     
 }
 
+const loginUser = async (req, res) =>{
+
+    try{
+        const { email, password } = req.body;
+        let user = await User.findOne({email});
+
+        if(!user){
+
+            return res.status(400).json("Invalid email or password ...") 
+
+        }else{
+
+            const validPassword = await bcrypt.compare(password, user.password);
+
+            if(!validPassword){
+                return res.status(400).json("This password is invalid")
+            }else{
+                
+                const token = await createToken(user._id);
+                return res.status(200).json({_id: user._id, email, name: user.name, token})
+            }
+
+        }
+
+    }catch(err){
+        return res.json({status: "error", code: 401, message:err.message})
+    }
+
+    }
 const getAllUsers = async (req, res) => {
     
     const users = await User.find({}, {
         "__v": false,
         "password": false,
         "updatedAt": false, //
-        "createdAt": false
+        "createdAt": false, 
+        
     });
     return res.json(users);
 }
 
 module.exports = {
     registerNewUser,
+    loginUser, 
     getAllUsers
 }
