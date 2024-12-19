@@ -1,6 +1,14 @@
 const User = require('../models/userModel')
 const bcrypt = require('bcrypt');
-const validator = require('validator')
+const validator = require('validator');
+const jwt = require('jsonwebtoken');
+
+//generating jwt token
+const createToken = (_id) =>{
+    const jwtKey = process.env.JWT_SECRET_KEY;
+    return jwt.sign({_id}, jwtKey, {expiresIn: "3d"})
+}
+
 const registerNewUser = async (req, res) =>{
     
     try{
@@ -15,6 +23,7 @@ const registerNewUser = async (req, res) =>{
             if(!name || !email || !password){
                 return res.status(400).json({status: "fail", data: "this user is already registered"}); 
             }
+
             if(!validator.isEmail(email)){
                 return res.status(400).json({status: "fail", data: "Email should be valid email ...."})
             }
@@ -22,13 +31,18 @@ const registerNewUser = async (req, res) =>{
             if(!validator.isStrongPassword(password)){
                 return res.status(400).json({status: "fail", data: "Password should be strong ...."})
             }
+            
             // hashing password
             const salt = await bcrypt.genSalt(10)
             const hashedPassword = await bcrypt.hash(password, salt);
              user = await  new User({name, email, password: hashedPassword});
              user.save();
-            return res.json(user);
+
+             const token = createToken(user._id);
+
+            return res.status(200).json({status: "success", data:{ id: user._id, name, email, token}});
         }
+
     }catch(err){
         return res.json({status: "error", code: 401, message:err.message})
     }
