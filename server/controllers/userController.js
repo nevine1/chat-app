@@ -79,6 +79,18 @@ const loginUser = async (req, res) =>{
     }
 
     }
+
+    const findUserById = async (req, res) =>{
+
+        try{
+            const id = req.params.id; 
+            console.log(id)
+            const user =  await User.findById(id); //
+            return res.json(user)
+        }catch(err){
+            return res.status(401).json({message: err.message});
+        }
+    }
 const getAllUsers = async (req, res) => {
     
     const users = await User.find({}, {
@@ -94,5 +106,6 @@ const getAllUsers = async (req, res) => {
 module.exports = {
     registerNewUser,
     loginUser, 
+    findUserById,
     getAllUsers
 }
