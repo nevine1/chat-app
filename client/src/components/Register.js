@@ -1,17 +1,23 @@
-"use client"
-import { useState } from 'react'
+import { useState} from 'react'
 import Link from 'next/link'
-const Login = () => {
+const Register = () => {
     const [email, setEmail ] = useState('')
+    const [userName, setUserName] = useState('')
     const [password, setPassword] = useState('')
   return (
     <div className="flex flex-col justify-center items-center mt-20 rounded-lg shadow-sm">
-      <h1 className="text-[30px] text-red-700">Login Form</h1>
+      <h1 className="text-[30px] text-red-700">Register Form</h1>
       <form 
-        className="w-[500px] bg-pink bg-gray-200 flex flex-col gap10 py-12 px-10 
+        className="w-[500px] bg-pink bg-gray-200 flex flex-col gap10 py-12 px-10
             border border-gray-500 rounded-md"
             >
-       
+        <input 
+            type="text"
+            value={userName}
+            onChange={(e) =>setUserName(e.target.value)}
+            placeholder="User Name ..."
+            className="mb-10 px-4 py-4 text-base text-gray-900 rounded-md outline-gray-300 placeholder:text-gray-400"
+        />
         <input 
             type="text"
             value={email}
@@ -31,12 +37,12 @@ const Login = () => {
             Submit
         </button>
         
-        <p className="text-center m-4 text-gray-600 text-[15px]">Create new account
-            <Link href="/register" className="text-blue-400"> Register</Link>
+        <p className="text-center mt-4 text-gray-600 text-[15px]">Already have account   
+            <Link href="/login" className="text-blue-400"> login</Link>
         </p>
       </form>
     </div>
   )
 }
 
-export default Login
+export default Register
