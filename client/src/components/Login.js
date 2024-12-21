@@ -6,7 +6,7 @@ const Login = () => {
     const [password, setPassword] = useState('')
   return (
     <div className="flex flex-col justify-center items-center mt-20 rounded-lg shadow-sm">
-      <h1 className="text-[30px] text-red-700">Login Form</h1>
+      <h1 className="text-[21px] text-blue-800 my-5">Sign in!</h1>
       <form 
         className="w-[500px] bg-pink bg-gray-200 flex flex-col gap10 py-12 px-10 
             border border-gray-500 rounded-md"
@@ -31,7 +31,7 @@ const Login = () => {
             Submit
         </button>
         
-        <p className="text-center m-4 text-gray-600 text-[15px]">Create new account
+        <p className="text-center mt-6 text-gray-600 text-[15px]">Create new account
             <Link href="/register" className="text-blue-400"> Register</Link>
         </p>
       </form>
