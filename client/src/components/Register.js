@@ -2,15 +2,18 @@ import { useState, useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import Link from 'next/link'
 const Register = () => {
-    const { user, registerInfo, updateRegisterInfo} = useContext(AuthContext)
+    const { user, registerInfo,
+        updateRegisterInfo, registerUser, 
+        setRegisterError, setRegisterLoading, 
+        isRegisterLoading } = useContext(AuthContext)
     console.log(user);
-    const [email, setEmail ] = useState('')
+   /*  const [email, setEmail ] = useState('')
     const [userName, setUserName] = useState('')
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState('') */
   return (
     <div className="flex flex-col justify-center items-center mt-20 rounded-lg shadow-sm">
       <h1 className="text-[21px] text-blue-800 my-5">Creating new account!</h1>
-      <form 
+      <form onSubmit={registerUser}
         className="w-[500px] bg-pink bg-gray-200 flex flex-col gap10 py-12 px-10
             border border-gray-500 rounded-md"
             >
@@ -37,9 +40,12 @@ const Register = () => {
         />
         <button type="submit"
             className="button-primary block mt-3 py-3 rounded-md text-white text-[18px] bg-blue-600">
-            Submit
+            { isRegisterLoading ? " creating ur account" : "Register"}
         </button>
-        
+        {
+          registerError?.error && 
+          <p className="text-red-600 text-[16px]">{registerError?.message}</p>
+        }
         <p className="text-center mt-6 text-gray-600 text-[15px]">Already have account   
             <Link href="/login" className="text-blue-400"> login</Link>
         </p>
