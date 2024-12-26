@@ -9,46 +9,81 @@ const createToken = (_id) =>{
     return jwt.sign({_id}, jwtKey, {expiresIn: "3d"})
 }
 
-const registerNewUser = async (req, res) =>{
-    
-    try{
 
-        const {name, email, password } = req.body; 
-        let user = await User.findOne({email}); 
+/* const registerNewUser = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+     
+        console.log('request Data:', req.body);
 
-        if(user){
-            return res.status(400).json({status: "fail", data: "this user is already registered"});
-        }else{
-
-            if(!name || !email || !password){
-                return res.status(400).json({status: "fail", data: "this user is already registered"}); 
-            }
-
-            if(!validator.isEmail(email)){
-                return res.status(400).json({status: "fail", data: "Email should be valid email ...."})
-            }
-
-            if(!validator.isStrongPassword(password)){
-                return res.status(400).json({status: "fail", data: "Password should be strong ...."})
-            }
-            
-            // hashing password
-            const salt = await bcrypt.genSalt(10)
-            const hashedPassword = await bcrypt.hash(password, salt);
-             user = await  new User({name, email, password: hashedPassword});
-             user.save();
-
-             const token = createToken(user._id);
-
-            return res.status(200).json({status: "success", data:{ id: user._id, name, email, token}});
+        if (!name || !email || !password) {
+            return res.status(400).json({ status: 'fail', data: 'All fields are required' });
         }
 
-    }catch(err){
-        return res.json({status: "error", code: 401, message:err.message})
+        // Validate email
+        if (!validator.isEmail(email)) {
+            return res.status(400).json({ status: 'fail', data: 'Invalid email format' });
+        }
+
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ status: 'fail', data: 'This user is already registered' });
+        }
+
+        // Validate password strength
+        if (!validator.isStrongPassword(password)) {
+            return res.status(400).json({ status: 'fail', data: 'Password is too weak' });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Save new user
+        const newUser = new User({ name, email, password: hashedPassword });
+        await newUser.save();
+
+        // Create JWT token
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.status(201).json({ status: 'success', data: { id: newUser._id, name, email, token } });
+
+    } catch (err) {
+        console.error('server registering error:', err);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
     }
-   
-    
-}
+}; */
+
+
+const registerNewUser = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        console.log(req.body);
+        
+        // Validate fields
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ name, email, password: hashedPassword });
+        await newUser.save();
+        const secret = process.env.JWT_SECRET_KEY;
+        const token = jwt.sign({ id: newUser._id }, secret, { expiresIn: '1h' });
+        return res.status(201).json({ message: 'User registered successfully', token });
+        
+    } catch (error) {
+        console.error('Registration Error:', error);  // Log the full error
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
 
 const loginUser = async (req, res) =>{
 
