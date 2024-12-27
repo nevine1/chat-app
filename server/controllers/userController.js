@@ -66,6 +66,7 @@ const registerNewUser = async (req, res) => {
         }
 
         const existingUser = await User.findOne({ email });
+        
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
@@ -75,7 +76,7 @@ const registerNewUser = async (req, res) => {
         await newUser.save();
         const secret = process.env.JWT_SECRET_KEY;
         const token = jwt.sign({ id: newUser._id }, secret, { expiresIn: '1h' });
-        return res.status(201).json({ message: 'User registered successfully', token });
+        return res.status(201).json({ token, user: {name: newUser.name, email: newUser.email } });
         
     } catch (error) {
         console.error('Registration Error:', error);  // Log the full error

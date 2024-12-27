@@ -25,7 +25,7 @@ export const postRequest = async (url, body) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: body
+            body,
         });
 
         const data = await response.json();
@@ -33,9 +33,10 @@ export const postRequest = async (url, body) => {
         if (!response.ok) {
             throw new Error(data.message || 'Request failed');
         }
+        console.log("data is", data)
         return data;
     } catch (error) {
         console.error('Fetch Error:', error);
-        throw error;  // Re-throw the error to ensure it's handled consistently
+        throw error;  
     }
 };

@@ -10,6 +10,7 @@ const Register = () => {
         setRegisterError, setRegisterLoading, 
         isRegisterLoading , registerError} = useContext(AuthContext)
     console.log(user);
+
     const handleChange = (e) => {
       const { name, value } = e.target;
       setRegisterInfo((prev) => ({
@@ -17,6 +18,7 @@ const Register = () => {
           [name]: value
       }));
   };
+  console.log(registerInfo);
   const [type, setType] = useState("text");
   const [showPassword, setShowPassword] = useState(false)
   return (

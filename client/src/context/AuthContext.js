@@ -1,5 +1,5 @@
 "use client"
-import { useState, createContext, useCallback } from "react";
+import { useState, useEffect, createContext, useCallback } from "react";
 import { postRequest, baseURL } from "@/utils/service";
 import { useRouter } from "next/navigation";
 export const AuthContext = createContext();
@@ -8,11 +8,12 @@ export const  AuthContextProvider = ({children}) =>{
     const router = useRouter();
     const [registerError, setRegisterError] = useState(null);
     const [isRegisterLoading, setRegisterLoading] = useState(false)
-    const [user, setUser ] = useState({ name: "vena"});
+    const [user, setUser ] = useState({ });
     const [registerInfo, setRegisterInfo] = useState({
         name: "", 
         email: " ",
         password: "",
+        
     });
     
     const updateRegisterInfo = useCallback((info) => {
@@ -35,6 +36,7 @@ export const  AuthContextProvider = ({children}) =>{
                 `${baseURL}/users/register`,
                 JSON.stringify(registerInfo)
             );
+            console.log("response is", JSON.stringify(response.user));
     
             setRegisterLoading(false);
     
@@ -42,11 +44,10 @@ export const  AuthContextProvider = ({children}) =>{
                 return setRegisterError(response.error);  
             }
     
-            // Store the registered user in localStorage
+            // Store the entire response including the token
             localStorage.setItem("User", JSON.stringify(response));
-
+    
             setUser(response);
-           
             router.push("/dashboard");
     
         } catch (err) {
@@ -55,46 +56,17 @@ export const  AuthContextProvider = ({children}) =>{
             setRegisterLoading(false);
         }
     }, [registerInfo]);
-    
 
-    /* const registerUser = useCallback(async (e) => {
-        e.preventDefault();
-        setRegisterLoading(true);
-        setRegisterError(null);
     
-        // Ensure all fields are filled
-        if (!registerInfo.name || !registerInfo.email || !registerInfo.password) {
-            alert('Please fill in all fields');
-            setRegisterLoading(false);
-            return;
-        }
+   useEffect(() =>{
+
+    const user = localStorage.getItem("User");
+    setUser(JSON.parse(user));
+
+   }, []) 
+
     
-        
-        try {
-            const response = await postRequest(
-                'http://localhost:4000/api/users/register',
-                JSON.stringify(registerInfo)
-            );
-            
-            
-            setRegisterLoading(false);
-            localStorage.setItem("User", JSON.stringify(response));
-            setUser(response);
-            
-            router.push('/dashboard');
-            setRegisterInfo({ })
-        } catch (error) {
-            console.error('Registration Error:', error.message);
-           
-            setRegisterError(error.message);
-            setRegisterLoading(false);
-        }
-    }, [registerInfo]); */
-    
-    
-    
-    
-    const authValues = {user, registerInfo,
+    const authValues = {user, setUser, registerInfo,
          updateRegisterInfo, registerUser, 
          setRegisterInfo,
          setRegisterError, setRegisterLoading,
