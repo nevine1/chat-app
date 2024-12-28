@@ -11,10 +11,10 @@ app.use(express.json()); // this middleware allows to use json with req, res dat
 //app.use(cors()); //it enables the server to communicate with front end
 const routeOfUsers = require('./routes/userRoute')
 
-router.use((req, res, next) => {
+/* router.use((req, res, next) => {
     console.log(`Request: ${req.method} ${req.originalUrl}`);
     next();
-});
+}); */
 //user router
 app.use("/api/users", routeOfUsers);
 
@@ -27,4 +27,4 @@ app.listen(port, () =>{
 
 mongoose.connect(uri)
 .then(()=> console.log("connection established successfully"))
-.catch((err) =>console.log("failed to connect to monogodb", err.message))
+.catch((err) =>console.log("failed to connect to monogodb because: ", err.message))

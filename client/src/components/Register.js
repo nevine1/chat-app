@@ -9,7 +9,7 @@ const Register = () => {
         updateRegisterInfo, registerUser, 
         setRegisterError, setRegisterLoading, 
         isRegisterLoading , registerError} = useContext(AuthContext)
-    console.log(user);
+ 
 
     const handleChange = (e) => {
       const { name, value } = e.target;

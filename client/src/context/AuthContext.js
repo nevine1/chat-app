@@ -16,6 +16,10 @@ export const  AuthContextProvider = ({children}) =>{
         
     });
     
+     useEffect(() =>{
+        const user = localStorage.getItem("User");
+        setUser(JSON.stringify(user))
+     }, [])
     const updateRegisterInfo = useCallback((info) => {
         setRegisterInfo(info);
         
@@ -36,20 +40,22 @@ export const  AuthContextProvider = ({children}) =>{
                 `${baseURL}/users/register`,
                 JSON.stringify(registerInfo)
             );
-            console.log("response is", JSON.stringify(response.user));
+            //this step to destruct user from the response to can get the name and email of the user
+            const { user, token } = response;
     
             setRegisterLoading(false);
     
             if (response.error) {
                 return setRegisterError(response.error);  
             }
-    
+            
             // Store the entire response including the token
-            localStorage.setItem("User", JSON.stringify(response));
+            localStorage.setItem("User", JSON.stringify(response.user));
     
-            setUser(response);
+            setUser(response.user);
+            
             router.push("/dashboard");
-    
+    console.log(response)
         } catch (err) {
             console.error('Registration Error:', err.message);
             setRegisterError(err.message);
@@ -65,12 +71,17 @@ export const  AuthContextProvider = ({children}) =>{
 
    }, []) 
 
-    
+    const logOutUser = () =>{
+        localStorage.removeItem("User");
+        setUser(null);
+        router.push("/")
+    }
     const authValues = {user, setUser, registerInfo,
          updateRegisterInfo, registerUser, 
          setRegisterInfo,
          setRegisterError, setRegisterLoading,
-         isRegisterLoading, registerError
+         isRegisterLoading, registerError,
+         logOutUser
         }
     return <AuthContext.Provider value={authValues}>
                 {children}

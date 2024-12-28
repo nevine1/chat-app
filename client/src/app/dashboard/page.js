@@ -2,11 +2,12 @@
 import React, {useContext} from 'react'
 import { AuthContext } from '@/context/AuthContext'
 const page = () => {
-    const { user, registerInfo } = useContext(AuthContext)
+    const { user} = useContext(AuthContext)
  
   return (
     <div>
-      <h1>Hello { registerInfo.name}</h1>
+      <h1>Hello { user.name}</h1>
+      <h1>Hello { user.email}</h1>
     </div>
   )
 }
