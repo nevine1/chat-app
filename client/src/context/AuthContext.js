@@ -6,8 +6,8 @@ export const AuthContext = createContext();
 
 export const  AuthContextProvider = ({children}) =>{
     const router = useRouter();
-    const [registerError, setRegisterError] = useState(null);
-    const [isRegisterLoading, setRegisterLoading] = useState(false)
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false)
     const [user, setUser ] = useState({ });
     const [registerInfo, setRegisterInfo] = useState({
         name: "", 
@@ -16,6 +16,10 @@ export const  AuthContextProvider = ({children}) =>{
         
     });
     
+    const [loginInfo, setLoginInfo] = useState({
+        name: "", 
+        email: " ",
+    })
      useEffect(() =>{
         const user = localStorage.getItem("User");
         setUser(JSON.stringify(user))
@@ -27,11 +31,11 @@ export const  AuthContextProvider = ({children}) =>{
     
     const registerUser = useCallback(async (e) => {
         e.preventDefault();
-        setRegisterLoading(true);
-        setRegisterError(null);
+        setIsLoading(true);
+        setError(null);
     
         if (!registerInfo.name || !registerInfo.email || !registerInfo.password) {
-            setRegisterLoading(false);
+            setIsLoading(false);
             return res.json("All fields are required");  
         }
     
@@ -43,10 +47,10 @@ export const  AuthContextProvider = ({children}) =>{
             //this step to destruct user from the response to can get the name and email of the user
             const { user, token } = response;
     
-            setRegisterLoading(false);
+            setIsLoading(false);
     
             if (response.error) {
-                return setRegisterError(response.error);  
+                return setError(response.error);  
             }
             
             // Store the entire response including the token
@@ -55,11 +59,11 @@ export const  AuthContextProvider = ({children}) =>{
             setUser(response.user);
             
             router.push("/dashboard");
-    console.log(response)
+   
         } catch (err) {
             console.error('Registration Error:', err.message);
-            setRegisterError(err.message);
-            setRegisterLoading(false);
+            setError(err.message);
+            setIsLoading(false);
         }
     }, [registerInfo]);
 
@@ -71,6 +75,31 @@ export const  AuthContextProvider = ({children}) =>{
 
    }, []) 
 
+   const loginUser = useCallback( async() =>{
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    try{
+        const response = await postRequest(
+            `${baseURL}/users/login`,
+            JSON.stringify(loginInfo)
+        );
+        setIsLoading(false);
+
+        if(response.error){
+            return setError(response);
+        }
+
+        localStorage.setItem("User", JSON.parse(response));
+        setUser(response.user);
+        router.push("/dashboard")
+    }catch(err){
+        console.error('Login Error:', err.message);
+            setError(err.message);
+            setIsLoading(false);
+    }
+   }, [loginInfo])
+
     const logOutUser = () =>{
         localStorage.removeItem("User");
         setUser(null);
@@ -79,9 +108,9 @@ export const  AuthContextProvider = ({children}) =>{
     const authValues = {user, setUser, registerInfo,
          updateRegisterInfo, registerUser, 
          setRegisterInfo,
-         setRegisterError, setRegisterLoading,
-         isRegisterLoading, registerError,
-         logOutUser
+         setError, setIsLoading,
+         isLoading, error,
+         logOutUser, loginUser
         }
     return <AuthContext.Provider value={authValues}>
                 {children}

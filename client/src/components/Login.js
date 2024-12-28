@@ -1,13 +1,14 @@
 "use client"
-import { useState } from 'react'
+import { useContext } from 'react'
 import Link from 'next/link'
+import { AuthContext } from '@/context/AuthContext'
 const Login = () => {
-    const [email, setEmail ] = useState('')
-    const [password, setPassword] = useState('')
+  const { user , loginUser , loginInfo, setLoginInfo } = useContext(AuthContext)
+
   return (
     <div className="flex flex-col justify-center items-center mt-20 rounded-lg shadow-sm">
       <h1 className="text-[21px] text-blue-800 my-5">Sign in!</h1>
-      <form 
+      <form onSubmit={loginUser}
         className="w-[500px] bg-pink bg-gray-200 flex flex-col gap10 py-12 px-10 
             border border-gray-500 rounded-md"
             >
