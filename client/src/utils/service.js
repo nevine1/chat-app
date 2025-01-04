@@ -18,7 +18,7 @@ export const baseURL = "http://localhost:4000/api";
     return { error: true, message}
 } */
 
-export const postRequest = async (url, body) => {
+/* export const postRequest = async (url, body) => {
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -29,8 +29,11 @@ export const postRequest = async (url, body) => {
         });
 
         const data = await response.json();
+        console.log("Full Response:", response);
+        console.log("Data:", data);
 
         if (!response.ok) {
+            console.error("Server Response:", data);
             throw new Error(data.message || 'Request failed');
         }
         console.log("data is", data)
@@ -39,4 +42,28 @@ export const postRequest = async (url, body) => {
         console.error('Fetch Error:', error);
         throw error;  
     }
-};
+}; */
+
+
+export const postRequest = async (url, body) => {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body,
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || "Request failed");
+      }
+      return data;
+    } catch (error) {
+      console.error("Fetch Error:", error);
+      throw error;
+    }
+  };
+  

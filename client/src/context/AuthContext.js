@@ -19,7 +19,7 @@ export const  AuthContextProvider = ({children}) =>{
     const [loginInfo, setLoginInfo] = useState({
         name: "", 
         email: " ",
-    })
+    });
      useEffect(() =>{
         const user = localStorage.getItem("User");
         setUser(JSON.stringify(user))
@@ -75,39 +75,51 @@ export const  AuthContextProvider = ({children}) =>{
 
    }, []) 
 
-   const loginUser = useCallback( async() =>{
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-    try{
-        const response = await postRequest(
-            `${baseURL}/users/login`,
+
+   const updateLoginInfo = useCallback((info) => {
+    setLoginInfo(info);
+    
+    }, []);
+
+    const loginUser = useCallback(async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError("");
+    
+        try {
+          const response = await postRequest(
+            `${"http://localhost:4000/api"}/users/login`,
             JSON.stringify(loginInfo)
-        );
-        setIsLoading(false);
-
-        if(response.error){
-            return setError(response);
+          );
+    
+          setIsLoading(false);
+    
+          if (response.error) {
+            setError("Invalid email or password");
+            return;
+          }
+    
+          // Save to localStorage
+          localStorage.setItem("User", JSON.stringify(response));
+          setUser(response.user);
+          router.push("/dashboard")
+          console.log("User:", response.user);
+        } catch (err) {
+          setError("Failed to login. Please try again.");
+          setIsLoading(false);
+          console.error("Login Error:", err);
         }
+      }, [loginInfo]);
 
-        localStorage.setItem("User", JSON.parse(response));
-        setUser(response.user);
-        router.push("/dashboard")
-    }catch(err){
-        console.error('Login Error:', err.message);
-            setError(err.message);
-            setIsLoading(false);
-    }
-   }, [loginInfo])
-
+   
     const logOutUser = () =>{
         localStorage.removeItem("User");
         setUser(null);
-        router.push("/")
+        router.push("/login")
     }
     const authValues = {user, setUser, registerInfo,
          updateRegisterInfo, registerUser, 
-         setRegisterInfo,
+         setRegisterInfo, updateLoginInfo, 
          setError, setIsLoading,
          isLoading, error,
          logOutUser, loginUser

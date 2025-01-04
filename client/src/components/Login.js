@@ -1,43 +1,71 @@
-"use client"
-import { useContext } from 'react'
-import Link from 'next/link'
-import { AuthContext } from '@/context/AuthContext'
+"use client";
+import { useContext, useState } from "react";
+import Link from "next/link";
+import { AuthContext } from "@/context/AuthContext";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+
 const Login = () => {
-  const { user , loginUser , loginInfo, setLoginInfo } = useContext(AuthContext)
+  const {
+    loginUser,
+    loginInfo,
+    updateLoginInfo,
+    isLoading,
+    error,
+  } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="flex flex-col justify-center items-center mt-20 rounded-lg shadow-sm">
-      <h1 className="text-[21px] text-blue-800 my-5">Sign in!</h1>
-      <form onSubmit={loginUser}
-        className="w-[500px] bg-pink bg-gray-200 flex flex-col gap10 py-12 px-10 
-            border border-gray-500 rounded-md"
-            >
-       
-        <input 
-            type="text"
-            value={email}
-            onChange={(e) =>setEmail(e.target.value)}
-            placeholder="Email..."
-            className="mb-8 px-4 py-4 text-base text-gray-900 rounded-md outline-gray-300 placeholder:text-gray-400"
+    <div className="flex flex-col justify-center items-center mt-20">
+      <h1 className="text-2xl font-bold text-blue-800">Sign In</h1>
+      
+      <form onSubmit={loginUser} className="w-[400px] bg-gray-100 p-6 rounded-md shadow-md">
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+
+        <input
+          type="email"
+          /* value={loginInfo.email} */
+          onChange={(e) => updateLoginInfo({ email: e.target.value })}
+          placeholder="Email"
+          required
+          className="w-full px-4 py-3 mb-4 border rounded-md"
         />
-        <input 
-            type="password"
-            value={password}
-            onChange={(e) =>setPassword(e.target.value)}
-            placeholder='Password...'
-            className=" mb-5 px-4 py-4 text-base text-gray-900 outline-gray-300 rounded-md placeholder:text-gray-400"
-        />
-        <button type="submit"
-            className="button-primary block mt-3 py-3 rounded-md text-white text-[18px] bg-blue-600">
-            Submit
+
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            /* value={loginInfo.password} */
+            onChange={(e) => updateLoginInfo({ password: e.target.value })}
+            placeholder="Password"
+            required
+            className="w-full px-4 py-3 border rounded-md"
+          />
+          <div
+            className="absolute right-3 top-4 cursor-pointer"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <FiEyeOff /> : <FiEye />}
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className={`w-full mt-6 py-3 rounded-md text-white ${
+            isLoading ? "bg-gray-500" : "bg-blue-600"
+          }`}
+          disabled={isLoading}
+        >
+          {isLoading ? "Signing in..." : "Sign In"}
         </button>
-        
-        <p className="text-center mt-6 text-gray-600 text-[15px]">Create new account
-            <Link href="/register" className="text-blue-400"> Register</Link>
+
+        <p className="text-center mt-6">
+          Don't have an account?{" "}
+          <Link href="/register" className="text-blue-500">
+            Register
+          </Link>
         </p>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

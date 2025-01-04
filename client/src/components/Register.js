@@ -5,20 +5,20 @@ import { FaRegEyeSlash } from "react-icons/fa6";
 import { AuthContext } from '../context/AuthContext'
 import Link from 'next/link'
 const Register = () => {
-    const { user, registerInfo,
+    const { user, registerInfo, error,
         updateRegisterInfo, registerUser, 
         setRegisterError, setRegisterLoading, 
         isRegisterLoading , registerError} = useContext(AuthContext)
  
 
-    const handleChange = (e) => {
+    /* const handleChange = (e) => {
       const { name, value } = e.target;
       setRegisterInfo((prev) => ({
           ...prev,
           [name]: value
       }));
-  };
-  console.log(registerInfo);
+  }; */
+  
   const [type, setType] = useState("text");
   const [showPassword, setShowPassword] = useState(false)
   return (
@@ -35,6 +35,7 @@ const Register = () => {
             placeholder="User Name ..."
             className="mb-10 px-4 py-4 text-base text-gray-900 rounded-md outline-gray-300 placeholder:text-gray-400"
         />
+        { error && <p>user is already </p>}
         <input 
             type="email"
             value={registerInfo.email}
@@ -65,7 +66,7 @@ const Register = () => {
             { isRegisterLoading ? " creating ur account" : "Register"}
         </button>
           {
-              registerError?.message && 
+              registerError && 
               <p className="text-red-600 text-[16px]">
                   {registerError?.message === 'this user is already registered' 
                       ? 'User already exists. Try logging in.' 
