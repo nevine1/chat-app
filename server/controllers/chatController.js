@@ -46,13 +46,16 @@ const findUserChats = async (req, res) =>{
 //find chat 
 const findSingleChat = async (req, res) =>{
     const {firstId, secondId} = req.params;
+    console.log(req.params.firstId, req.params.secondId)
 
     try{
 
-        const chat = Chat.find({
+        const chat = await Chat.find({
             members: { $all: [firstId, secondId] }
         })
+
         return res.status(200).json(chat)
+        //console.log([firstId, secondId])
     }catch(err){
 
         console.log(err);

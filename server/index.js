@@ -11,6 +11,7 @@ app.use(express.json()); // this middleware allows to use json with req, res dat
 //app.use(cors()); //it enables the server to communicate with front end
 const routeOfUsers = require('./routes/userRoute')
 const routeOfChats = require('./routes/chatRoute')
+const routeOfMessages = require('./routes/messageRoute')
 
 /* router.use((req, res, next) => {
     console.log(`Request: ${req.method} ${req.originalUrl}`);
@@ -18,7 +19,8 @@ const routeOfChats = require('./routes/chatRoute')
 }); */
 //user router
 app.use("/api/users", routeOfUsers);
-app.use("/api/chats", routeOfChats)
+app.use("/api/chats", routeOfChats);
+app.use("/api/messages", routeOfMessages);
 
 const port = process.env.PORT
 
