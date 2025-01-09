@@ -67,3 +67,20 @@ export const postRequest = async (url, body) => {
     }
   };
   
+
+  export const getRequest = async (url) =>{
+    const response = await fetch("url");
+    const data = response.json();
+
+    if(!response.ok){
+
+      const message = "An error occured....";
+
+      if(data?.message){
+        message = data.message;
+      }
+      return { error: true, message };
+    }
+
+    return data; 
+  }
