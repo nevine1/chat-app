@@ -17,9 +17,10 @@ export const  AuthContextProvider = ({children}) =>{
     });
     
     const [loginInfo, setLoginInfo] = useState({
-        name: "", 
-        email: " ",
+        email: "", 
+        password: " ",
     });
+ 
      useEffect(() =>{
         const user = localStorage.getItem("User");
         setUser(JSON.stringify(user))
@@ -81,7 +82,7 @@ export const  AuthContextProvider = ({children}) =>{
     
     }, []);
 
-    const loginUser = useCallback(async (e) => {
+   /*  const loginUser = useCallback(async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setError("");
@@ -109,8 +110,40 @@ export const  AuthContextProvider = ({children}) =>{
           setIsLoading(false);
           console.error("Login Error:", err);
         }
-      }, [loginInfo]);
-
+      }, [loginInfo]); */
+      const loginUser = useCallback(async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError("");
+    
+        console.log("URL:", `${"http://localhost:4000/api"}/users/login`); // Log the URL
+        console.log("Request Body:", JSON.stringify(loginInfo)); // Log the request body
+    console.log(loginInfo)
+        try {
+            const response = await postRequest(
+                `${"http://localhost:4000/api"}/users/login`,
+                JSON.stringify(loginInfo)
+            );
+    
+            setIsLoading(false);
+    
+            if (response.error) {
+                setError("Invalid email or password");
+                return;
+            }
+    
+            // Save to localStorage
+            localStorage.setItem("User", JSON.stringify(response));
+            setUser(response.user);
+            router.push("/dashboard");
+            console.log("User:", response.user);
+        } catch (err) {
+            setError("Failed to login. Please try again.");
+            setIsLoading(false);
+            console.error("Login Error:", err);
+        }
+    }, [loginInfo]);
+    
    
     const logOutUser = () =>{
         localStorage.removeItem("User");
@@ -120,8 +153,8 @@ export const  AuthContextProvider = ({children}) =>{
     const authValues = {user, setUser, registerInfo,
          updateRegisterInfo, registerUser, 
          setRegisterInfo, updateLoginInfo, 
-         setError, setIsLoading,
-         isLoading, error,
+         setError, setIsLoading, setLoginInfo,
+         isLoading, error, loginInfo,
          logOutUser, loginUser
         }
     return <AuthContext.Provider value={authValues}>

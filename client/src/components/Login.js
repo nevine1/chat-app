@@ -5,13 +5,15 @@ import { AuthContext } from "@/context/AuthContext";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {
+
   const {
     loginUser,
     loginInfo,
     updateLoginInfo,
     isLoading,
     error,
-  } = useContext(AuthContext);
+    } = useContext(AuthContext);
+
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -23,18 +25,19 @@ const Login = () => {
 
         <input
           type="email"
-          /* value={loginInfo.email} */
-          onChange={(e) => updateLoginInfo({ email: e.target.value })}
+          value={loginInfo.email}
+          onChange={(e) => updateLoginInfo({ ...loginInfo, email: e.target.value })}
           placeholder="Email"
           required
           className="w-full px-4 py-3 mb-4 border rounded-md"
+          autoComplete="on"
         />
 
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            /* value={loginInfo.password} */
-            onChange={(e) => updateLoginInfo({ password: e.target.value })}
+            value={loginInfo.password}
+            onChange={(e) => updateLoginInfo({...loginInfo, password: e.target.value })}
             placeholder="Password"
             required
             className="w-full px-4 py-3 border rounded-md"
@@ -43,7 +46,7 @@ const Login = () => {
             className="absolute right-3 top-4 cursor-pointer"
             onClick={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? <FiEyeOff /> : <FiEye />}
+            {showPassword ?   <FiEye /> : <FiEyeOff />}
           </div>
         </div>
 

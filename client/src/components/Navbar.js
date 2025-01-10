@@ -14,7 +14,7 @@ const Navbar = () => {
           <h1>ChatApp</h1>
         </div>
         <div>
-          <h2>{user && user.name} online</h2>
+          <h2>{user && `${user.name} online`} </h2>
         </div>
         <ul className="flex flex-row sm:gap-3 items-center">
             
@@ -23,12 +23,12 @@ const Navbar = () => {
             <Link href="/" className="" onClick={logOutUser}>Logout {user.name}</Link>
           ) : (
             <>
-            <Link href="/register" className="">Register</Link>
-        
-            <Link href="/login" className="">Login</Link>
+              <Link href="/register" className="">Register</Link>
+              <Link href="/login" className="">Login</Link>
             </>
           )
          }
+         
         </ul>
       </nav>
    

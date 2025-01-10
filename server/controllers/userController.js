@@ -56,6 +56,7 @@ const createToken = (_id) =>{
 
 
 const registerNewUser = async (req, res) => {
+    
     try {
         const { name, email, password } = req.body;
         console.log(req.body);
@@ -72,10 +73,11 @@ const registerNewUser = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ name, email, password: hashedPassword });
+        const newUser =  new User({ name, email, password: hashedPassword });
         await newUser.save();
         const secret = process.env.JWT_SECRET_KEY;
         const token = jwt.sign({ id: newUser._id }, secret, { expiresIn: '1h' });
+        console.log(newUser)
         return res.status(201).json({ token, user: {name: newUser.name, email: newUser.email , password: newUser.password} });
         
     } catch (error) {
@@ -90,18 +92,24 @@ const loginUser = async (req, res) =>{
 
     try{
         const { email, password } = req.body;
+        
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
         let user = await User.findOne({email});
-
+        
         if(!user){
-
-            return res.status(400).json("Invalid email or password ...") 
+            
+            return res.status(400).json({ message: "Invalid email or password ..." });
 
         }else{
 
             const validPassword = await bcrypt.compare(password, user.password);
 
             if(!validPassword){
-                return res.status(400).json("This password is invalid")
+                return res.status(400).json({ message: "This password is invalid" })
             }else{
                 
                 const token = await createToken(user._id);
