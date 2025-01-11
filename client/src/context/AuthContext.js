@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, createContext, useCallback } from "react";
-import { postRequest, baseURL } from "@/utils/service";
+import { postRequest, baseUrl } from "@/utils/service";
 import { useRouter } from "next/navigation";
 export const AuthContext = createContext();
 
@@ -18,7 +18,7 @@ export const  AuthContextProvider = ({children}) =>{
     
     const [loginInfo, setLoginInfo] = useState({
         email: "", 
-        password: " ",
+        password: "",
     });
  
      useEffect(() =>{
@@ -42,7 +42,7 @@ export const  AuthContextProvider = ({children}) =>{
     
         try {
             const response = await postRequest(
-                `${baseURL}/users/register`,
+                `${baseUrl}/users/register`,
                 JSON.stringify(registerInfo)
             );
             //this step to destruct user from the response to can get the name and email of the user

@@ -1,7 +1,10 @@
+
+import { useContext  } from 'react'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { AuthContext, AuthContextProvider } from "@/context/AuthContext";
+import { ChatContextProvider, ChatContext } from "@/context/ChatContext";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -18,6 +21,9 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
+ 
+
   return (
     <html lang="en">
       <body
@@ -25,7 +31,9 @@ export default function RootLayout({ children }) {
       >
         <AuthContextProvider>
           <Navbar/>
-          {children}
+          <ChatContextProvider >
+            {children}
+          </ChatContextProvider>
         </AuthContextProvider>
       </body>
     </html>

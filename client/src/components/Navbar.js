@@ -17,7 +17,7 @@ const Navbar = () => {
           <h2>{user && `${user.name} online`} </h2>
         </div>
         <ul className="flex flex-row sm:gap-3 items-center">
-            
+           <Link href="/chat" className="">Chat</Link> 
          {
           user ? (
             <Link href="/" className="" onClick={logOutUser}>Logout {user.name}</Link>
@@ -28,6 +28,7 @@ const Navbar = () => {
             </>
           )
          }
+
          
         </ul>
       </nav>
