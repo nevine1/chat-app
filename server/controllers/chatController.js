@@ -63,11 +63,21 @@ const findSingleChat = async (req, res) =>{
     }
 }
 
+const getAllChats = async (req, res) => {
 
+    try{
+        const chats = await Chat.find();
+        return res.status(200).json(chats)
+    }catch(err){
+        console.log(err);
+        return res.status(500).json(err)
+    }
+}
 module.exports = {
     createChat,
     findSingleChat,
-    findUserChats
+    findUserChats, 
+    getAllChats
 }
 
 

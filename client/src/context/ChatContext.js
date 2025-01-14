@@ -1,10 +1,12 @@
 "use client"
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useState, useEffect , useContext} from 'react'
 import { getRequest , baseUrl } from '@/utils/service';
+import { AuthContext } from './AuthContext';
 export const ChatContext = createContext();
 
-export const ChatContextProvider = ({ children, user }) =>{
-    const [ userChats, setUserChats ] = useState(null)
+export const ChatContextProvider = ({ children }) =>{
+  const {user} = useContext(AuthContext)
+    const [ userChats, setUserChats ] = useState([])
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -19,6 +21,8 @@ export const ChatContextProvider = ({ children, user }) =>{
         if (user?._id) {
           // HTTP request
           const response = await getRequest(`${baseUrl}/chats/${user?._id}`);
+          console.log("response is :",response);
+          console.log("user is is", user?._id)
           if (response.error) {
             setError(response);
           } else {
@@ -34,6 +38,9 @@ export const ChatContextProvider = ({ children, user }) =>{
 
     getUserChats();
   }, [user]);
+  
+  console.log("use email is", user.email)
+  console.log("userChats", userChats);
     const chatContextValues={ userChats, isLoading, error, setUserChats }
     return (
         <ChatContext.Provider value={chatContextValues}>

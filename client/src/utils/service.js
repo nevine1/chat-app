@@ -29,7 +29,7 @@ export const postRequest = async (url, body) => {
 
   export const getRequest = async (url) =>{
     
-    const response = await fetch("url");
+    const response = await fetch(url);
     const data = response.json();
 
     if(!response.ok){

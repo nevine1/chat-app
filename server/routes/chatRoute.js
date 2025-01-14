@@ -3,9 +3,12 @@ const router = express.Router();
 const {
     createChat,
     findSingleChat,
-    findUserChats
+    findUserChats, 
+    getAllChats
 } = require('../controllers/chatController')
 
+//get All chats 
+router.get("/", getAllChats);
 //create chat
 router.post("/", createChat);
 
