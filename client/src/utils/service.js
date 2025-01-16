@@ -34,7 +34,7 @@ export const postRequest = async (url, body) => {
 
     if(!response.ok){
 
-      const message = "An error occured....";
+      const message = "An error occurred ....";
 
       if(data?.message){
         message = data.message;

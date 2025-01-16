@@ -39,7 +39,7 @@ export const ChatContextProvider = ({ children }) =>{
     getUserChats();
   }, [user]);
   
-  console.log("use email is", user.email)
+  /* console.log("user email is", user.email) */
   console.log("userChats", userChats);
     const chatContextValues={ userChats, isLoading, error, setUserChats }
     return (
