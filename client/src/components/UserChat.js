@@ -18,23 +18,28 @@ const UserChat = () => {
         <div>
           <h1>List </h1>
         </div>
-        <div>
-          <h1>Chat </h1>
-        </div>
-      </div>
+        
       
+      <div>
       {
         userChats?.length < 1 ? null : (
-          <div className="h-[50vh] bg-red-500 text-white p-10 m-8">
-                    <h1>Here is the chatssssssssssssssssssssssssssssssssssssssss</h1>
-                    { isLoading && <p>Chat is loading ....</p> }
-                    <div className="p-10 m-6 h-[80vh] text-white">
-                      { userChats?.map((chat, index) => (
-                          <ChatOfUser chat={chat} user={user} key={index} />
-                      ))}
-                    </div>
+          <div className="h-[50vh] bg-red-500  p-10 ">
+                    
+            { isLoading && <p>Chat is loading ....</p> }
+
+              <div className="p-4 w-[65vw]  h-[80vh] text-white">
+
+                { userChats?.map((chat, index) => (
+
+                  <ChatOfUser chat={chat} user={user} key={index} />
+
+                 ))}
+
+                  </div>
                 </div>
           )}
+          </div>
+        </div>
       </div>
   )
 }

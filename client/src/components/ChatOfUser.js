@@ -4,16 +4,16 @@ import { getRequest, baseUrl } from "@/utils/service";
 const ChatOfUser = ({ chat, user }) => {
   const [recipientUser, setRecipientUser] = useState(null);
   const [error, setError] = useState(null);
-
-  const recipientId = chat?.members.find((id) => id !== user._id);
+console.log("chat is ",chat)
+  const recipientId = chat?.members.find((id) => id !== user._id); //getting the id for the other one who is chatting with the logged in user 
 
   useEffect(() => {
-    if (!recipientId) return; // Exit if recipientId is undefined
+    if (!recipientId) return; 
 
     const getUserChat = async () => {
-      console.log("Fetching user data for ID:", recipientId);
+     
       const response = await getRequest(`${baseUrl}/users/${recipientId}`);
-      console.log("API Response:", response); // Log the full API response
+      console.log("API Response:", response); 
 
       if (response.error) {
         setError(response.error);
@@ -21,7 +21,7 @@ const ChatOfUser = ({ chat, user }) => {
       }
 
       setRecipientUser(response.user);
-      console.log("Recipient User Set:", response.user); // Log the updated state
+      console.log("Recipient User Set:", response.user); 
     };
 
     getUserChat();
@@ -31,19 +31,25 @@ const ChatOfUser = ({ chat, user }) => {
     console.log("Updated recipientUser state:", recipientUser);
   }, [recipientUser]);
 
-  console.log("Chat Members:", chat?.members);
-  console.log("Current User ID:", user?._id);
+ 
   console.log("Recipient User ID:", recipientId);
   console.log("Recipient User:", recipientUser);
 
   return (
-    <div>
-      <h1>Chat is:</h1>
-      {recipientUser ? (
-        <p>Recipient: {recipientUser.name || "Name not available"}</p>
-      ) : (
-        <p>Loading recipient details...</p>
-      )}
+    <div className="flex flex-row gap-10  ">
+      
+      <div>
+      { recipientUser ? (
+
+          <p>{recipientUser.name || "Name not available"}</p>
+          ) : (
+          <p>Loading recipient details...</p>
+          )
+          }
+      </div>
+      <div>
+        <p className="text-right text-[14px] text-white">{chat?.createdAt}</p>
+      </div> 
     </div>
   );
 };
