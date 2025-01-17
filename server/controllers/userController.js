@@ -10,51 +10,6 @@ const createToken = (_id) =>{
 }
 
 
-/* const registerNewUser = async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
-     
-        console.log('request Data:', req.body);
-
-        if (!name || !email || !password) {
-            return res.status(400).json({ status: 'fail', data: 'All fields are required' });
-        }
-
-        // Validate email
-        if (!validator.isEmail(email)) {
-            return res.status(400).json({ status: 'fail', data: 'Invalid email format' });
-        }
-
-        // Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ status: 'fail', data: 'This user is already registered' });
-        }
-
-        // Validate password strength
-        if (!validator.isStrongPassword(password)) {
-            return res.status(400).json({ status: 'fail', data: 'Password is too weak' });
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Save new user
-        const newUser = new User({ name, email, password: hashedPassword });
-        await newUser.save();
-
-        // Create JWT token
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        res.status(201).json({ status: 'success', data: { id: newUser._id, name, email, token } });
-
-    } catch (err) {
-        console.error('server registering error:', err);
-        res.status(500).json({ status: 'error', message: 'Internal server error' });
-    }
-}; */
-
-
 const registerNewUser = async (req, res) => {
     
     try {
@@ -128,11 +83,17 @@ const loginUser = async (req, res) =>{
 
         try{
             const id = req.params.id; 
-            console.log(id)
-            const user =  await User.findById(id); //
-            return res.json(user)
+           
+            const user =  await User.findById(id); 
+
+            if (!user) {
+                return res.status(404).json({ error: "User not found" });
+              }
+
+            res.status(200).json({ user });
         }catch(err){
-            return res.status(401).json({message: err.message});
+            console.error("Error fetching user:", err.message);
+            res.status(500).json({ error: "Internal server error" });
         }
     }
 const getAllUsers = async (req, res) => {

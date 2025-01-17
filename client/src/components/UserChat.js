@@ -7,6 +7,7 @@ import ChatOfUser from './ChatOfUser';
 const UserChat = () => {
 
     const { user } = useContext(AuthContext);
+   
     const { userChats, isLoading, error, setUserChats } = useContext(ChatContext);
   console.log("user chats are: ", userChats)
 
