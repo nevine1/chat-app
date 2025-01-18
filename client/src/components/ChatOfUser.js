@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { getRequest, baseUrl } from "@/utils/service";
-
+import Image from "next/image";
+import profile from '../assets/svg/profile.svg'
+import { format } from 'date-fns'
 const ChatOfUser = ({ chat, user }) => {
   const [recipientUser, setRecipientUser] = useState(null);
   const [error, setError] = useState(null);
@@ -36,19 +38,30 @@ console.log("chat is ",chat)
   console.log("Recipient User:", recipientUser);
 
   return (
-    <div className="flex flex-row gap-10  ">
+    <div className="flex flex-row justify-between cursor-pointer">
       
       <div>
       { recipientUser ? (
 
-          <p>{recipientUser.name || "Name not available"}</p>
+          <div className="flex flex-row gap-1">
+            <Image src={profile} alt="profile" height={20} width={20} />
+            <p  className=" text-[15px] text-white">
+              {recipientUser.name || "Name not available"}
+            </p>
+          </div>
           ) : (
           <p>Loading recipient details...</p>
           )
           }
       </div>
-      <div>
-        <p className="text-right text-[14px] text-white">{chat?.createdAt}</p>
+
+      <div className="flex flex-row gap-2 justify-evenly">
+         <p className=" text-[15px] text-white">
+         {chat?.createdAt ? format(chat.createdAt, 'dd MMM yyyy') : 'N/A'}
+          </p> 
+       
+        <p className=" text-[15px] text-white">Notification</p>
+        <p className=" text-[15px] text-white">online</p>
       </div> 
     </div>
   );
